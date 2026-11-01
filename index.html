@@ -376,7 +376,7 @@ async function startGame(){
   const roles = {};
   order.forEach((id, i) => roles[id] = i === 0 ? 'liar' : i === 1 ? 'troll' : 'audience');
   const t = pickTopic();
-  const recent = [t.text].concat(room.recent || []).slice(0, 15);
+  const recent = [t.text].concat(room.recent || []).slice(0, 60);
   await roomRef.update({
     phase: 'input', round: (room.round || 0) + 1, recent,
     game: { topic: t.text, unit: t.unit || '', min: Number(t.min), max: Number(t.max), roles }
