@@ -256,6 +256,7 @@ const BUILTIN_TOPICS = [
 ];
 
 const MIN_PLAYERS = 3, MAX_PLAYERS = 6;
+const ROOM_TTL = 6 * 60 * 60 * 1000; // 6시간 지난 방은 자동 만료
 const ROLES = {
   liar:     {name:"라이어", icon:"🎭", goal:"주제를 모른 채 숫자를 적어요. 끝까지 들키지 않으면 승리!"},
   troll:    {name:"트롤",   icon:"🃏", goal:"주제를 알고 있어요. 모두가 나를 라이어로 지목하게 만들면 승리!"},
@@ -439,7 +440,8 @@ function render(){
   if(!configured) $app.innerHTML = viewSetup();
   else if(!room) $app.innerHTML = viewHome();
   else $app.innerHTML = viewTop() + ({lobby:viewLobby, input:viewInput, discuss:viewDiscuss, reveal:viewReveal, result:viewResult}[room.phase] || viewLobby)()
-    + (isHost() && room.phase !== 'lobby' ? `<div class="foot"><button class="btn ghost small end" data-act="end">게임 종료</button></div>` : '');
+    + (isHost() && room.phase !== 'lobby' ? `<div class="foot"><button class="btn ghost small end" data-act="end">게임 종료</button></div>`
+      : !isHost() && ['input','discuss','reveal'].includes(room.phase) ? `<div class="foot"><button class="btn ghost small" data-act="leave">나가기</button></div>` : '');
 
   Object.entries(keep).forEach(([id, v]) => { const el = document.getElementById(id); if(el && !el.dataset.fresh) el.value = v; });
   if(focusId){ const el = document.getElementById(focusId); if(el) el.focus(); }
@@ -713,11 +715,19 @@ $app.addEventListener('keydown', e => {
 render();
 if(db){
   const saved = store('le_room');
+  const q = new URLSearchParams(location.search);
+  const inviteRoom = q.get('t') ? q.get('room') : null;
   if(saved){
     db.ref('rooms/'+saved).get().then(s => {
-      if(s.exists() && s.val().players && s.val().players[myId]) enterRoom(saved);
-      else store('le_room', null);
-    }).catch(()=>{});
+      const r = s.exists() ? s.val() : null;
+      const inRoom = r && r.players && r.players[myId];
+      const stale = r && Date.now() - (r.createdAt || 0) > ROOM_TTL;
+      // 새 QR로 들어왔거나, 오래된 방이면 이전 방에 다시 들어가지 않음
+      if(inRoom && !stale && (!inviteRoom || inviteRoom === saved)) return enterRoom(saved);
+      store('le_room', null);
+      if(inRoom && r.host !== myId) db.ref(`rooms/${saved}/players/${myId}`).remove().catch(()=>{});
+      if(r && stale) db.ref('rooms/'+saved).remove().catch(()=>{});
+    }).catch(()=>{ store('le_room', null); });
   }
 }
 </script>
