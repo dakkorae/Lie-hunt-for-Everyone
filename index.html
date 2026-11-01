@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f4f3">
+<title>라이어 게임 for Everyone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f4f4f3; --card:#ffffff; --ink:#111111; --ink-2:#3a3a3a; --soft:#8a8a8a;
+  --line:#e6e6e4; --line-2:#d4d4d2; --chip:#f1f1f0; --mid:#5c5c5c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{background:#f4f4f3}
+body,h1,h2,h3,p,div,li{word-break:keep-all;overflow-wrap:break-word}
+body{
+  min-height:100vh;color:var(--ink);background:var(--bg);
+  font-family:'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+}
+.wrap{max-width:480px;margin:0 auto;padding:12px 16px 56px}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.02em}
+.brand{text-align:center;margin:44px 0 30px}
+.brand h1{font-size:38px;line-height:1.15}
+.brand h1 .for{display:block;font-size:15px;font-weight:700;letter-spacing:.32em;color:var(--soft);margin-top:10px;text-transform:uppercase}
+.brand .sub{font-size:11px;letter-spacing:.42em;color:var(--soft);margin-top:14px}
+.brand .bar{width:28px;height:2px;background:var(--ink);margin:18px auto 0}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin:14px 2px 6px;font-size:13px;color:var(--soft)}
+.topbar .name{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.topbar .name small{font-weight:700;color:var(--soft);margin-left:4px;letter-spacing:.1em}
+.badge{background:var(--ink);color:#fff;padding:3px 10px;border-radius:999px;letter-spacing:.18em;font-weight:700}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;margin:14px 0;
+  box-shadow:0 1px 2px rgba(0,0,0,.03),0 8px 24px rgba(0,0,0,.04)}
+.card h2{font-size:20px;text-align:center;margin-bottom:12px}
+.card h3{font-size:17px;margin-bottom:6px}
+.muted{color:var(--soft);font-size:14px}
+.center{text-align:center}
+.rule{border:0;border-top:1px solid var(--line);margin:24px 0}
+
+label{display:block;font-size:13px;font-weight:700;color:var(--mid);margin:12px 0 6px}
+input[type=text],input[type=number],input[type=tel]{
+  width:100%;font:inherit;font-size:17px;padding:13px 14px;color:var(--ink);
+  background:#fafafa;border:1px solid var(--line-2);border-radius:12px;outline:none;transition:border-color .15s,box-shadow .15s;
+}
+input:focus{border-color:var(--ink);background:#fff;box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+input.code{text-align:center;letter-spacing:.5em;font-size:26px;font-weight:800;padding-left:.5em}
+
+.btn{display:block;width:100%;font:inherit;font-size:16px;font-weight:800;letter-spacing:.02em;cursor:pointer;
+  padding:15px 14px;margin-top:12px;border-radius:12px;color:#fff;background:var(--ink);border:1px solid var(--ink);transition:opacity .15s}
+.btn:active{opacity:.8}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+.btn.ghost{color:var(--ink);background:#fff;border:1px solid var(--line-2)}
+.btn.small{font-size:13px;padding:9px 14px;width:auto;display:inline-block;margin:0;border-radius:999px}
+.row{display:flex;gap:10px}.row>*{flex:1}
+
+.plist{list-style:none;padding:0;margin:4px 0 0}
+.plist li{display:flex;align-items:center;justify-content:space-between;padding:11px 2px;border-bottom:1px solid var(--line)}
+.plist li:last-child{border-bottom:0}
+.plist .who{font-size:16px;font-weight:700}
+.plist .x{background:none;border:0;color:var(--soft);font-size:16px;cursor:pointer;padding:0 6px}
+.crown{font-size:11px;font-weight:800;background:var(--ink);color:#fff;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:2px}
+.done{color:var(--ink);font-weight:700;font-size:14px} .wait{color:var(--soft);font-size:14px}
+
+.bigcode{font-size:56px;font-weight:800;letter-spacing:.3em;text-align:center;padding-left:.3em;line-height:1.2}
+
+.role{text-align:center;padding:28px 18px}
+.role .icon{font-size:40px;line-height:1;filter:grayscale(1)}
+.role .rname{font-size:34px;font-weight:800;margin:8px 0 6px;letter-spacing:-.02em}
+.role.liar{background:var(--ink);color:#fff;border-color:var(--ink)} .role.liar .muted{color:#b5b5b5}
+.role.troll{background:#3a3a3a;color:#fff;border-color:#3a3a3a} .role.troll .muted{color:#bdbdbd}
+
+.topic{font-size:23px;font-weight:800;text-align:center;line-height:1.4;letter-spacing:-.02em;margin-top:4px}
+.topic.hidden{letter-spacing:.3em;font-size:30px}
+.range{text-align:center;margin-top:12px;font-size:15px;color:var(--mid)}
+.range b{font-size:18px;color:var(--ink)}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.24em;color:var(--soft);text-align:center;text-transform:uppercase}
+
+.mynum{font-size:120px;font-weight:800;line-height:1;text-align:center;margin:12px 0 0;letter-spacing:-.04em}
+.myname{text-align:center;font-size:24px;font-weight:800}
+.peek{margin-top:16px}
+.peekbox{margin-top:12px;text-align:center;font-size:17px}
+
+.reveal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rcard{border:1px solid var(--line);border-radius:14px;background:#fafafa;padding:14px 8px;text-align:center}
+.rcard .n{font-size:38px;font-weight:800;line-height:1.15;letter-spacing:-.03em}
+.rcard .nm{font-size:15px;font-weight:700}
+.rcard .rl{display:inline-block;margin-top:6px;padding:2px 10px;font-size:12px;font-weight:800;border-radius:999px}
+.rl.liar{background:var(--ink);color:#fff} .rl.troll{background:#5c5c5c;color:#fff} .rl.audience{background:#fff;color:var(--ink);border:1px solid var(--line-2)}
+.pick{display:block;width:100%;margin-top:10px;font:inherit;font-size:13px;font-weight:700;padding:9px;cursor:pointer;
+  background:#fff;border:1px solid var(--line-2);color:var(--ink);border-radius:10px}
+.rcard.accused{border:2px solid var(--ink);background:#fff}
+
+.winner{text-align:center;padding:30px 18px;background:var(--ink);color:#fff;border-color:var(--ink)}
+.winner .muted{color:#bdbdbd}
+.winner .wt{font-size:30px;font-weight:800;line-height:1.3;margin:6px 0;letter-spacing:-.02em}
+.winner .eyebrow{color:#9a9a9a}
+.score{display:flex;justify-content:space-between;padding:10px 2px;border-bottom:1px solid var(--line);font-size:16px}
+.score:last-child{border-bottom:0}
+.score b{font-size:17px}
+
+details.topics summary{cursor:pointer;font-size:16px;font-weight:800;list-style:none;text-align:center}
+details.topics summary::-webkit-details-marker{display:none}
+.tlist{list-style:none;padding:0;margin:12px 0 0;font-size:14px}
+.tlist li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+
+.rules{margin:0;padding:0;list-style:none;font-size:14.5px;color:var(--ink-2)}
+.rules li{display:flex;gap:10px;padding:7px 0}
+.rules .num{flex:0 0 22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.sec{font-size:12px;font-weight:800;letter-spacing:.2em;color:var(--soft);margin:18px 0 6px}
+.sec:first-of-type{margin-top:4px}
+.roles-tbl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14.5px;color:var(--ink-2)}
+.roles-tbl b{color:var(--ink)}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);max-width:90%;background:var(--ink);color:#fff;
+  padding:11px 18px;border-radius:999px;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.2);
+  opacity:0;pointer-events:none;transition:opacity .25s;z-index:10;text-align:center}
+.toast.show{opacity:1}
+.hint{font-size:14px;color:var(--soft);text-align:center;margin-top:12px}
+.foot{text-align:center;margin-top:24px}
+.qr{display:flex;justify-content:center;margin:4px 0 6px}
+.qr img{width:200px;height:200px;padding:10px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.btn.end{color:#b00020;border-color:#e8c4c9}
+code{background:var(--chip);padding:1px 6px;border-radius:4px}
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ===========================================================
+   ① Firebase 설정값 — Firebase 콘솔에서 복사한 값으로 바꿔 넣으세요
+   =========================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyApGzdKrIMGi2L9B2zl3q15hG6DUacJxtE",
+  authDomain: "lie-hunt-for-everyone.firebaseapp.com",
+  databaseURL: "https://lie-hunt-for-everyone-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "lie-hunt-for-everyone",
+  storageBucket: "lie-hunt-for-everyone.firebasestorage.app",
+  messagingSenderId: "1045760559742",
+  appId: "1:1045760559742:web:d730089e62127e870de62f"
+};
+
+/* ===========================================================
+   ② 기본 주제 카드 (주제, 단위, 최소, 최대)
+   =========================================================== */
+const BUILTIN_TOPICS = [
+  ["하루에 \"퇴사하고 싶다\"고 생각하는 횟수","번",0,100],
+  ["월요일 아침 출근 의욕","점",0,100],
+  ["회의 중에 딴생각하는 시간 비율","%",0,100],
+  ["하루에 회사(학교)에서 화장실로 피신하는 시간","분",0,120],
+  ["상사 몰래 휴대폰 보는 시간 (하루)","분",0,300],
+  ["지금 당장 통장에 있는 돈으로 버틸 수 있는 날","일",0,365],
+  ["로또 1등 되면 회사에 말하기까지 걸리는 시간","일",0,365],
+  ["로또 1등 되면 부모님께 드릴 금액","억",0,30],
+  ["한 달에 택배 받는 횟수","번",0,100],
+  ["장바구니에 담아만 두고 안 산 물건 개수","개",0,300],
+  ["결제하고 후회한 물건 개수 (올해)","개",0,100],
+  ["한 달 배달 음식 주문 횟수","번",0,60],
+  ["배달앱 VIP 등급까지 남은 정도","%",0,100],
+  ["한 달 커피값","만 원",0,30],
+  ["편의점 하루 최다 방문 횟수","번",0,10],
+  ["주량","병",0,10],
+  ["가장 늦게까지 술 마셔 본 시각 (새벽 몇 시)","시",0,12],
+  ["술 마시고 기억이 끊겨 본 횟수","번",0,100],
+  ["술자리에서 \"이번이 진짜 마지막 잔\"이라고 말하는 횟수","번",0,30],
+  ["다음 날 이불킥한 술자리 횟수","번",0,100],
+  ["노래방에서 최고 점수","점",0,100],
+  ["노래방 18번 곡을 불러 본 횟수","번",0,500],
+  ["첫사랑을 경험한 나이","살",0,50],
+  ["지금까지 사귄 사람 수","명",0,30],
+  ["짝사랑해 본 횟수","번",0,50],
+  ["고백해 본 횟수","번",0,30],
+  ["고백 받아 본 횟수","번",0,50],
+  ["가장 길게 연애해 본 기간","개월",0,200],
+  ["헤어진 연인에게 연락하고 싶었던 횟수","번",0,100],
+  ["소개팅 해 본 횟수","번",0,100],
+  ["이상형과 실제 연애 상대의 일치율","%",0,100],
+  ["내 연애 세포 생존율","%",0,100],
+  ["배우자(연인)에게 \"사랑해\"라고 말하는 횟수 (일주일)","번",0,100],
+  ["배우자(연인)와 마지막으로 싸운 지 며칠 지났는지","일",0,365],
+  ["부부싸움(연인 싸움)에서 내 승률","%",0,100],
+  ["결혼하고 싶은 나이 (했다면 실제 나이)","살",20,60],
+  ["내 외모 자신감","점",0,100],
+  ["거울 속 내 모습과 사진 속 내 모습의 차이","%",0,100],
+  ["셀카 한 장 건지려고 찍는 사진 수","장",0,200],
+  ["휴대폰 사진첩에 있는 사진 수","백 장",0,1000],
+  ["휴대폰 화면 하루 사용 시간","시간",0,24],
+  ["하루에 유튜브·숏폼 보는 시간","분",0,600],
+  ["자기 전 '딱 하나만 더' 보는 영상 수","개",0,100],
+  ["안 읽은 카톡 메시지 수","개",0,999],
+  ["단톡방 개수","개",0,100],
+  ["읽씹 해 놓고 까먹은 메시지 수 (이번 주)","개",0,50],
+  ["이메일 안 읽은 메일 수","개",0,9999],
+  ["구독 중인 OTT·유료 서비스 개수","개",0,20],
+  ["헬스장 등록하고 실제로 간 비율","%",0,100],
+  ["다이어트 결심한 횟수 (올해)","번",0,100],
+  ["다이어트 결심 후 버틴 기간","일",0,365],
+  ["야식 먹는 횟수 (일주일)","번",0,14],
+  ["라면 끓일 때 넣는 물의 양","ml",0,1000],
+  ["치킨 한 마리 다 먹는 데 걸리는 시간","분",0,120],
+  ["뷔페에서 접시 가져오는 횟수","번",0,20],
+  ["하루 걸음 수","천 보",0,50],
+  ["계단 대신 엘리베이터를 기다린 최장 시간","분",0,30],
+  ["주말에 집 밖에 안 나가고 버틸 수 있는 날","일",0,30],
+  ["알람 끄고 다시 잠드는 횟수","번",0,20],
+  ["평일 평균 수면 시간","시간",0,24],
+  ["주말 최장 수면 기록","시간",0,24],
+  ["낮잠 최장 기록","시간",0,12],
+  ["샤워 시간","분",0,90],
+  ["머리 안 감고 버틴 최장 기록","일",0,30],
+  ["화장실에서 휴대폰 보며 앉아 있는 시간","분",0,60],
+  ["방귀를 참아 본 최장 시간","분",0,300],
+  ["빨래 바구니가 꽉 찰 때까지 미루는 날","일",0,30],
+  ["설거지 미루는 최장 기록","일",0,14],
+  ["냉장고 속 유통기한 지난 음식 개수","개",0,50],
+  ["방 청소 주기","일",0,90],
+  ["집 안에 있는 충전기 개수","개",0,50],
+  ["집에 있는 비닐봉지 개수","개",0,500],
+  ["옷장에 있지만 1년간 안 입은 옷의 비율","%",0,100],
+  ["가지고 있는 신발 켤레 수","켤레",0,100],
+  ["가방 속에 들어 있는 영수증 개수","장",0,100],
+  ["지갑(휴대폰)을 잃어버려 본 횟수","번",0,50],
+  ["길치 정도","점",0,100],
+  ["운전 실력 자신감","점",0,100],
+  ["주차 한 번에 성공하는 확률","%",0,100],
+  ["과속 카메라 앞에서만 착해지는 정도","%",0,100],
+  ["지금까지 가 본 나라 수","개국",0,100],
+  ["공항에서 비행기 놓칠 뻔한 횟수","번",0,20],
+  ["여행 가서 숙소에서만 보낸 시간 비율","%",0,100],
+  ["부모님께 전화하는 횟수 (한 달)","번",0,60],
+  ["명절에 듣는 잔소리 개수","개",0,100],
+  ["\"나 때는 말이야\"를 말해 본 횟수 (올해)","번",0,100],
+  ["요즘 신조어 이해도","%",0,100],
+  ["스스로 느끼는 정신 연령","살",0,100],
+  ["스스로 느끼는 체력 나이","살",0,100],
+  ["아직도 내가 MZ라고 생각하는 정도","%",0,100],
+  ["흰머리 개수 (추정)","개",0,1000],
+  ["어제 먹은 점심 메뉴를 기억할 확률","%",0,100],
+  ["거짓말 탐지기에 걸리지 않을 자신","%",0,100],
+  ["좀비 사태 때 생존 가능 일수","일",0,365],
+  ["무인도에서 버틸 수 있는 날","일",0,365],
+  ["1억 받고 휴대폰 없이 살 수 있는 기간","개월",0,120],
+  ["1억 받고 짜장면만 먹고 살 수 있는 기간","일",0,365],
+  ["이 중에 내가 제일 잘생겼(예뻤)을 확률","%",0,100],
+  ["오늘 이 모임에 나오기 싫었던 정도","%",0,100]
+];
+
+const MIN_PLAYERS = 3, MAX_PLAYERS = 6;
+const ROLES = {
+  liar:     {name:"라이어", icon:"🎭", goal:"주제를 모른 채 숫자를 적어요. 끝까지 들키지 않으면 승리!"},
+  troll:    {name:"트롤",   icon:"🃏", goal:"주제를 알고 있어요. 모두가 나를 라이어로 지목하게 만들면 승리!"},
+  audience: {name:"관객",   icon:"🎩", goal:"주제를 알고 있어요. 숨어 있는 라이어를 찾아 지목하면 승리!"}
+};
+const WIN = {
+  audience:   {title:"관객의 승리", desc:"라이어의 정체가 밝혀졌습니다!"},
+  liar_troll: {title:"라이어와 트롤의 승리", desc:"트롤의 연기에 모두 속았습니다!"},
+  liar:       {title:"라이어의 승리", desc:"엉뚱한 관객이 지목되었습니다!"}
+};
+
+/* ---------- 유틸 ---------- */
+const $app = document.getElementById('app');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function store(k, v){ try{ if(v === undefined) return localStorage.getItem(k); if(v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){ return null; } }
+let toastTimer;
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+let myId = store('le_pid');
+if(!myId){ myId = 'p' + Math.random().toString(36).slice(2,10); store('le_pid', myId); }
+let myName = store('le_name') || '';
+let roomCode = null, room = null, roomRef = null, peek = false;
+
+const configured = !!firebaseConfig.databaseURL && !firebaseConfig.databaseURL.includes('여기에');
+let db = null;
+if(configured && window.firebase){ firebase.initializeApp(firebaseConfig); db = firebase.database(); }
+
+/* ---------- 직접 추가한 주제 (호스트 기기에 저장) ---------- */
+function getCustom(){ try{ return JSON.parse(store('le_custom') || '[]'); }catch(e){ return []; } }
+function setCustom(list){ store('le_custom', JSON.stringify(list)); }
+
+/* ---------- 방 관리 ---------- */
+const isHost = () => room && room.host === myId;
+const players = () => room && room.players ? room.players : {};
+const nameOf = id => (players()[id] && players()[id].name) || '(나간 사람)';
+
+async function createRoom(){
+  const name = (document.getElementById('nameIn').value || '').trim();
+  if(!name) return toast('닉네임을 먼저 적어 주세요');
+  myName = name; store('le_name', name);
+  let code;
+  for(let i=0;i<8;i++){
+    code = String(Math.floor(1000 + Math.random()*9000));
+    const s = await db.ref('rooms/'+code).get();
+    if(!s.exists()) break;
+  }
+  await db.ref('rooms/'+code).set({
+    host: myId, phase: 'lobby', round: 0, createdAt: Date.now(),
+    joinToken: Math.random().toString(36).slice(2,10),
+    players: { [myId]: { name, joinedAt: Date.now(), score: 0 } }
+  });
+  enterRoom(code);
+}
+
+async function joinRoom(codeArg, token){
+  const name = (document.getElementById('nameIn')?.value || myName || '').trim();
+  const code = (codeArg || document.getElementById('codeIn').value || '').trim();
+  if(!name) return toast('닉네임을 먼저 적어 주세요');
+  if(!/^\d{4}$/.test(code)) return toast('입장 코드 4자리를 적어 주세요');
+  myName = name; store('le_name', name);
+  const s = await db.ref('rooms/'+code).get();
+  if(!s.exists()) return toast(token ? '이미 끝난 게임의 QR이에요. 호스트에게 새 QR을 받아 주세요' : '그런 방이 없어요. 코드를 다시 확인해 주세요');
+  const r = s.val(); const ps = r.players || {};
+  if(token && r.joinToken !== token) return toast('이미 끝난 게임의 QR이에요. 호스트에게 새 QR을 받아 주세요');
+  if(ps[myId]){ await db.ref(`rooms/${code}/players/${myId}/name`).set(name); return enterRoom(code); }
+  if(!['lobby','result'].includes(r.phase)) return toast('게임이 진행 중이에요. 이번 판이 끝나면 들어와 주세요');
+  if(Object.keys(ps).length >= MAX_PLAYERS) return toast(`방이 가득 찼어요 (최대 ${MAX_PLAYERS}명)`);
+  if(Object.values(ps).some(p => p.name === name)) return toast('같은 닉네임이 이미 있어요');
+  await db.ref(`rooms/${code}/players/${myId}`).set({ name, joinedAt: Date.now(), score: 0 });
+  enterRoom(code);
+}
+
+function enterRoom(code){
+  if(roomRef) roomRef.off();
+  roomCode = code; store('le_room', code); peek = false;
+  roomRef = db.ref('rooms/'+code);
+  roomRef.on('value', snap => {
+    room = snap.val();
+    if(!room){ leaveLocal(); toast('게임이 종료되었어요'); return; }
+    if(!room.players || !room.players[myId]){ leaveLocal(); toast('방에서 나왔어요'); return; }
+    hostAutoAdvance();
+    render();
+  });
+}
+
+function leaveLocal(){
+  if(roomRef) roomRef.off();
+  roomRef = null; room = null; roomCode = null; store('le_room', null);
+  history.replaceState(null, '', location.pathname);
+  render();
+}
+
+async function leaveRoom(){
+  if(isHost()){
+    if(!confirm('호스트가 나가면 방이 닫혀요. 나갈까요?')) return;
+    await db.ref('rooms/'+roomCode).remove();
+  } else {
+    if(!confirm('방에서 나갈까요?')) return;
+    await db.ref(`rooms/${roomCode}/players/${myId}`).remove();
+  }
+}
+
+/* ---------- 게임 진행 (호스트) ---------- */
+function pickTopic(){
+  const pool = BUILTIN_TOPICS.map(t => ({text:t[0],unit:t[1],min:t[2],max:t[3]})).concat(getCustom());
+  const recent = room.recent || [];
+  let cands = pool.filter(t => !recent.includes(t.text));
+  if(!cands.length) cands = pool;
+  return cands[Math.floor(Math.random()*cands.length)];
+}
+
+async function startGame(){
+  const ids = Object.keys(players());
+  if(ids.length < MIN_PLAYERS || ids.length > MAX_PLAYERS) return toast(`${MIN_PLAYERS}~${MAX_PLAYERS}명이 모여야 시작할 수 있어요`);
+  const order = shuffle(ids);
+  const roles = {};
+  order.forEach((id, i) => roles[id] = i === 0 ? 'liar' : i === 1 ? 'troll' : 'audience');
+  const t = pickTopic();
+  const recent = [t.text].concat(room.recent || []).slice(0, 15);
+  await roomRef.update({
+    phase: 'input', round: (room.round || 0) + 1, recent,
+    game: { topic: t.text, unit: t.unit || '', min: Number(t.min), max: Number(t.max), roles }
+  });
+}
+
+function hostAutoAdvance(){
+  if(!isHost() || room.phase !== 'input' || !room.game) return;
+  const ids = Object.keys(room.game.roles || {}).filter(id => players()[id]);
+  const nums = room.game.numbers || {};
+  if(ids.length && ids.every(id => nums[id] !== undefined)) roomRef.update({ phase: 'discuss' });
+}
+
+async function forceDiscuss(){
+  if(!confirm('아직 입력하지 않은 사람이 있어요. 그래도 주제를 공개할까요?')) return;
+  await roomRef.update({ phase: 'discuss' });
+}
+
+async function revealRoles(){
+  if(!confirm('지목을 마쳤나요? 모두의 역할을 공개합니다.')) return;
+  await roomRef.update({ phase: 'reveal' });
+}
+
+async function chooseAccused(pid){
+  const role = room.game.roles[pid];
+  if(!confirm(`가장 많이 지목된 사람이 "${nameOf(pid)}" 님이 맞나요?`)) return;
+  const winner = role === 'liar' ? 'audience' : role === 'troll' ? 'liar_troll' : 'liar';
+  const upd = { phase: 'result', 'game/accused': pid, 'game/winner': winner };
+  Object.entries(room.game.roles).forEach(([id, r]) => {
+    if(!players()[id]) return;
+    const won = winner === 'audience' ? r === 'audience' : winner === 'liar_troll' ? (r === 'liar' || r === 'troll') : r === 'liar';
+    if(won) upd[`players/${id}/score`] = (players()[id].score || 0) + 1;
+  });
+  await roomRef.update(upd);
+}
+
+async function endGame(){
+  if(!isHost()) return;
+  if(!confirm('정말 게임을 종료할까요?\n모든 참가자가 처음 화면으로 돌아가고, 지금까지의 전적도 모두 사라져요.')) return;
+  await db.ref('rooms/'+roomCode).remove();
+}
+
+async function toLobby(){ await roomRef.update({ phase: 'lobby', game: null }); }
+
+async function submitNumber(){
+  const g = room.game; const el = document.getElementById('numIn');
+  const raw = (el.value || '').trim();
+  const v = Number(raw);
+  if(raw === '' || !Number.isInteger(v)) return toast('정수로 적어 주세요');
+  if(v < g.min || v > g.max) return toast(`${g.min} ~ ${g.max} 사이의 숫자만 쓸 수 있어요`);
+  await db.ref(`rooms/${roomCode}/game/numbers/${myId}`).set(v);
+}
+
+/* ---------- 화면 그리기 ---------- */
+function render(){
+  // 입력 중이던 내용과 커서를 보존
+  const keep = {}; let focusId = null;
+  $app.querySelectorAll('input[id]').forEach(i => keep[i.id] = i.value);
+  if(document.activeElement && document.activeElement.id) focusId = document.activeElement.id;
+
+  if(!configured) $app.innerHTML = viewSetup();
+  else if(!room) $app.innerHTML = viewHome();
+  else $app.innerHTML = viewTop() + ({lobby:viewLobby, input:viewInput, discuss:viewDiscuss, reveal:viewReveal, result:viewResult}[room.phase] || viewLobby)()
+    + (isHost() && room.phase !== 'lobby' ? `<div class="foot"><button class="btn ghost small end" data-act="end">게임 종료</button></div>` : '');
+
+  Object.entries(keep).forEach(([id, v]) => { const el = document.getElementById(id); if(el && !el.dataset.fresh) el.value = v; });
+  if(focusId){ const el = document.getElementById(focusId); if(el) el.focus(); }
+}
+
+const brand = () => `<div class="brand"><h1>라이어 게임<span class="for">for Everyone</span></h1><div class="sub">WHO IS THE LIAR?</div><div class="bar"></div></div>`;
+
+function viewSetup(){
+  return brand() + `<section class="card"><h2>설정이 필요해요</h2>
+    <p>이 파일의 <code>firebaseConfig</code> 부분에 Firebase 설정값을 넣어야 여러 사람이 함께 접속할 수 있어요.</p>
+    <p class="muted">설정 방법은 함께 받은 안내를 참고해 주세요.</p></section>`;
+}
+
+function viewHome(){
+  const q = new URLSearchParams(location.search);
+  const urlCode = q.get('room') || '';
+  if(urlCode && q.get('t')) return brand() + `
+  <section class="card">
+    <div class="eyebrow">INVITATION</div>
+    <h2 style="margin-top:6px">게임에 초대받았어요</h2>
+    <p class="muted center">닉네임만 적으면 바로 참가해요.</p>
+    <label for="nameIn">닉네임</label>
+    <input id="nameIn" type="text" maxlength="10" placeholder="예) 셜록" value="${esc(myName)}">
+    <button class="btn" data-act="joinInvite">참가하기</button>
+  </section>
+  <div class="foot"><button class="btn ghost small" data-act="home">처음 화면으로</button></div>`;
+  return brand() + `
+  <section class="card">
+    <label for="nameIn">닉네임</label>
+    <input id="nameIn" type="text" maxlength="10" placeholder="예) 셜록" value="${esc(myName)}">
+    <hr class="rule">
+    <h3 class="center">새 게임 만들기</h3>
+    <p class="muted center">내 휴대폰이 호스트가 되어 방을 만들어요.</p>
+    <button class="btn" data-act="create">방 만들기</button>
+    <hr class="rule">
+    <h3 class="center">입장 코드로 참가</h3>
+    <p class="muted center">게스트로 게임에 참가해요.</p>
+    <label for="codeIn">입장 코드 4자리</label>
+    <input id="codeIn" class="code" type="tel" inputmode="numeric" maxlength="4" placeholder="0000" value="${esc(urlCode)}">
+    <button class="btn ghost" data-act="join">입장하기</button>
+  </section>
+  <section class="card"><h2>게임의 규칙</h2>
+    <div class="sec">역할</div>
+    <div class="roles-tbl">
+      <b>라이어 1명</b><span>주제를 모르고 숫자 범위만 봐요. 들키지 않는 게 목표!</span>
+      <b>트롤 1명</b><span>주제를 알아요. 일부러 의심받아 라이어로 지목되는 게 목표!</span>
+      <b>관객</b><span>주제를 알아요. 숨은 라이어를 찾아내는 게 목표!</span>
+    </div>
+    <div class="sec">진행 순서</div>
+    <ol class="rules">
+      <li><span class="num">1</span><span>호스트가 방을 만들고, 모두 입장 코드로 참가해요. (3~6명)</span></li>
+      <li><span class="num">2</span><span>각자 휴대폰에 역할과 주제, 숫자 범위가 나와요.</span></li>
+      <li><span class="num">3</span><span>범위 안에서 나에게 맞는 숫자를 적어요. 라이어는 눈치껏!</span></li>
+      <li><span class="num">4</span><span>모두 적으면 주제가 공개돼요. 화면을 보여 주며 왜 그 숫자인지 설명해요.</span></li>
+      <li><span class="num">5</span><span>셋·둘·하나! 라이어 같은 사람을 동시에 손가락으로 지목해요. 동점이면 다시!</span></li>
+      <li><span class="num">6</span><span>호스트가 결과를 공개하고, 가장 많이 지목된 사람을 눌러요.</span></li>
+    </ol>
+    <div class="sec">승리 조건</div>
+    <ul class="rules">
+      <li><span class="num">✓</span><span>라이어가 지목되면 <b>관객 승리</b></span></li>
+      <li><span class="num">✓</span><span>트롤이 지목되면 <b>라이어·트롤 승리</b></span></li>
+      <li><span class="num">✓</span><span>관객이 지목되면 <b>라이어 승리</b></span></li>
+    </ul>
+  </section>`;
+}
+
+function viewTop(){
+  return `<div class="topbar"><span class="name">라이어 게임<small>FOR EVERYONE</small></span>
+    <span>${room.round ? `ROUND ${room.round} · ` : ''}<span class="badge">${esc(roomCode)}</span></span></div>`;
+}
+
+function playerList(opts = {}){
+  const ps = players();
+  const ids = Object.keys(ps).sort((a,b) => (ps[a].joinedAt||0) - (ps[b].joinedAt||0));
+  return `<ul class="plist">` + ids.map(id => {
+    let right = '';
+    if(opts.status){ const done = opts.status(id); right = done === null ? '<span class="wait">관람</span>' : done ? '<span class="done">✓ 제출</span>' : '<span class="wait">작성 중…</span>'; }
+    else if(isHost() && id !== myId) right = `<button class="x" data-act="kick" data-id="${id}" aria-label="내보내기">✕</button>`;
+    return `<li><span class="who">${esc(ps[id].name)}${id === room.host ? '<span class="crown">HOST</span>' : ''}${id === myId ? ' <span class="muted">(나)</span>' : ''}</span>${right}</li>`;
+  }).join('') + `</ul>`;
+}
+
+function inviteUrl(){
+  return location.origin + location.pathname + '?room=' + roomCode + (room && room.joinToken ? '&t=' + room.joinToken : '');
+}
+let qrCache = {};
+function qrBlock(){
+  const url = inviteUrl();
+  if(!qrCache[url] && window.QRCode){
+    try{
+      const tmp = document.createElement('div');
+      new QRCode(tmp, { text: url, width: 360, height: 360, colorDark: '#111111', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+      const c = tmp.querySelector('canvas');
+      qrCache[url] = c ? c.toDataURL() : (tmp.querySelector('img') || {}).src;
+    }catch(e){}
+  }
+  return qrCache[url] ? `<div class="qr"><img src="${qrCache[url]}" alt="참가용 QR 코드"></div>` : '';
+}
+
+function viewLobby(){
+  const n = Object.keys(players()).length;
+  const canStart = n >= MIN_PLAYERS && n <= MAX_PLAYERS;
+  let html = `
+  <section class="card"><h2>입장 코드</h2>
+    ${isHost() ? qrBlock() : ''}
+    <div class="bigcode">${esc(roomCode)}</div>
+    <p class="muted center">${isHost() ? 'QR을 찍으면 닉네임만 적고 바로 들어와요.<br>' : ''}같은 주소로 들어와 이 코드를 입력해도 돼요.</p>
+    <button class="btn ghost small" style="display:block;margin:8px auto 0" data-act="copy">초대 링크 복사</button>
+  </section>
+  <section class="card"><h2>참가자 (${n}/${MAX_PLAYERS})</h2>${playerList()}</section>`;
+  if(isHost()){
+    html += `<button class="btn" data-act="start" ${canStart ? '' : 'disabled'}>게임 시작</button>
+      ${canStart ? '' : `<p class="hint">${MIN_PLAYERS}~${MAX_PLAYERS}명이 모이면 시작할 수 있어요.</p>`}
+      ${viewTopicManager()}`;
+  } else {
+    html += `<p class="hint">호스트가 게임을 시작하기를 기다리는 중…</p>`;
+  }
+  return html + `<div class="foot"><button class="btn ghost small" data-act="leave">나가기</button></div>`;
+}
+
+function viewTopicManager(){
+  const list = getCustom();
+  return `<section class="card"><details class="topics"><summary>＋ 주제 카드 직접 추가하기 (${list.length})</summary>
+    <p class="muted">기본 주제 ${BUILTIN_TOPICS.length}개에 더해, 여기서 추가한 주제도 무작위로 나와요. 이 휴대폰에 저장됩니다.</p>
+    <label for="tText">주제</label><input id="tText" type="text" maxlength="40" placeholder="예) 하루에 한숨 쉬는 횟수">
+    <label for="tUnit">단위</label><input id="tUnit" type="text" maxlength="6" placeholder="예) 번">
+    <div class="row"><div><label for="tMin">최소</label><input id="tMin" type="number" inputmode="numeric" placeholder="0"></div>
+    <div><label for="tMax">최대</label><input id="tMax" type="number" inputmode="numeric" placeholder="30"></div></div>
+    <button class="btn ghost" data-act="addTopic">주제 추가</button>
+    <ul class="tlist">${list.map((t,i) => `<li><span>${esc(t.text)} <span class="muted">(${t.min}~${t.max}${esc(t.unit)})</span></span><button class="x" data-act="delTopic" data-id="${i}">✕</button></li>`).join('')}</ul>
+  </details></section>`;
+}
+
+function myRoleCard(){
+  const r = room.game.roles[myId]; const R = ROLES[r];
+  return `<section class="card role ${r}"><div class="eyebrow muted">나의 역할</div><div class="icon">${R.icon}</div><div class="rname">${R.name}</div><div class="muted">${R.goal}</div></section>`;
+}
+
+function viewInput(){
+  const g = room.game;
+  if(!g.roles[myId]) return `<section class="card center"><h2>이번 판은 구경 중</h2><p class="muted">다음 판부터 함께할 수 있어요.</p></section>`;
+  const role = g.roles[myId];
+  const nums = g.numbers || {};
+  const mine = nums[myId];
+  const ids = Object.keys(g.roles).filter(id => players()[id]);
+  const doneCnt = ids.filter(id => nums[id] !== undefined).length;
+  let html = myRoleCard() + `<section class="card"><div class="eyebrow">이번 판의 주제</div>
+    ${role === 'liar' ? `<div class="topic hidden">？？？</div><p class="muted center">라이어는 주제를 볼 수 없어요. 범위 안에서 그럴듯한 숫자를 적으세요.</p>` : `<div class="topic">${esc(g.topic)}</div>`}
+    <div class="range">범위 <b>${g.min}</b> ~ <b>${g.max}</b> ${esc(g.unit)}</div>`;
+  if(mine === undefined){
+    html += `<label for="numIn">나의 숫자</label><input id="numIn" class="code" style="letter-spacing:.1em" type="number" inputmode="numeric" min="${g.min}" max="${g.max}" placeholder="?">
+      <button class="btn" data-act="submit">제출하기</button>`;
+  } else {
+    html += `<div class="mynum" style="font-size:72px">${mine}</div><p class="hint">제출 완료! 다른 참가자를 기다리는 중… (${doneCnt}/${ids.length})</p>`;
+  }
+  html += `</section><section class="card"><h3 class="center">제출 현황</h3>${playerList({status: id => g.roles[id] ? nums[id] !== undefined : null})}</section>`;
+  if(isHost()) html += `<div class="foot"><button class="btn ghost small" data-act="force">입력 기다리지 않고 주제 공개</button></div>`;
+  return html;
+}
+
+function viewDiscuss(){
+  const g = room.game;
+  if(!g.roles[myId]) return `<section class="card center"><h2>토론 중</h2><div class="topic">${esc(g.topic)}</div></section>`;
+  const mine = (g.numbers || {})[myId];
+  const r = g.roles[myId];
+  let html = `<section class="card"><div class="eyebrow">이번 판의 주제</div><div class="topic">${esc(g.topic)}</div>
+    <div class="range">${g.min} ~ ${g.max} ${esc(g.unit)}</div></section>
+  <section class="card"><div class="myname">${esc(myName)}</div>
+    <div class="mynum">${mine === undefined ? '–' : mine}</div>
+    <div class="center muted">${esc(g.unit)}</div>
+    <div class="center"><button class="btn ghost small peek" data-act="peek">${peek ? '역할 가리기' : '내 역할 몰래 보기'}</button></div>
+    ${peek ? `<div class="peekbox">${ROLES[r].icon} <b>${ROLES[r].name}</b></div>` : ''}
+  </section>
+  <p class="hint">화면을 서로 보여 주며 왜 이 숫자를 적었는지 이야기해 보세요.<br>충분히 이야기했다면 셋·둘·하나에 동시에 라이어를 지목! 동점이면 다시 지목합니다.</p>`;
+  if(isHost()) html += `<button class="btn" data-act="reveal">결과 공개</button>`;
+  else html += `<p class="hint">지목이 끝나면 호스트가 결과를 공개해요.</p>`;
+  return html;
+}
+
+function resultGrid(showPick){
+  const g = room.game; const nums = g.numbers || {};
+  return `<div class="reveal-grid">` + Object.keys(g.roles).filter(id => players()[id]).map(id => {
+    const r = g.roles[id];
+    return `<div class="rcard ${g.accused === id ? 'accused' : ''}"><div class="nm">${esc(nameOf(id))}</div>
+      <div class="n">${nums[id] === undefined ? '–' : nums[id]}</div>
+      <span class="rl ${r}">${ROLES[r].icon} ${ROLES[r].name}</span>
+      ${showPick ? `<button class="pick" data-act="accuse" data-id="${id}">이 사람이 지목됨</button>` : ''}</div>`;
+  }).join('') + `</div>`;
+}
+
+function viewReveal(){
+  const g = room.game;
+  return `<section class="card"><h2>정체 공개</h2><div class="topic" style="font-size:20px">${esc(g.topic)}</div>
+    <div class="range" style="margin-bottom:14px">${g.min} ~ ${g.max} ${esc(g.unit)}</div>
+    ${resultGrid(isHost())}
+    <p class="hint">${isHost() ? '가장 많이 지목된 사람을 눌러 주세요. 동점이었다면 다시 지목한 결과를 누르세요.' : '호스트가 지목 결과를 입력하는 중…'}</p></section>`;
+}
+
+function viewResult(){
+  const g = room.game; const W = WIN[g.winner] || WIN.audience;
+  const ps = players();
+  const board = Object.keys(ps).sort((a,b) => (ps[b].score||0) - (ps[a].score||0));
+  let html = `<section class="card winner"><div class="eyebrow">RESULT</div><div class="wt">${W.title}</div>
+    <div class="muted">${W.desc}</div>
+    <p>지목된 사람: <b>${esc(nameOf(g.accused))}</b> (${ROLES[g.roles[g.accused]].name})</p></section>
+  <section class="card"><h3 class="center">이번 판의 역할</h3>${resultGrid(false)}</section>
+  <section class="card"><h3 class="center">누적 승리</h3>${board.map(id => `<div class="score"><span>${esc(ps[id].name)}${id===myId?' <span class="muted">(나)</span>':''}</span><b>${ps[id].score||0}승</b></div>`).join('')}</section>`;
+  if(isHost()) html += `<button class="btn" data-act="start">새 게임</button><button class="btn ghost" data-act="lobby">대기실로 (참가자·주제 정리)</button>`;
+  else html += `<p class="hint">호스트가 다음 판을 준비하는 중…</p>`;
+  return html + (isHost() ? '' : `<div class="foot"><button class="btn ghost small" data-act="leave">나가기</button></div>`);
+}
+
+/* ---------- 이벤트 ---------- */
+async function act(a, id){
+  try{
+    switch(a){
+      case 'create': return await createRoom();
+      case 'join': return await joinRoom();
+      case 'joinInvite': { const q = new URLSearchParams(location.search); return await joinRoom(q.get('room'), q.get('t')); }
+      case 'home': history.replaceState(null, '', location.pathname); return render();
+      case 'start': return await startGame();
+      case 'submit': return await submitNumber();
+      case 'force': return await forceDiscuss();
+      case 'reveal': return await revealRoles();
+      case 'accuse': return await chooseAccused(id);
+      case 'lobby': return await toLobby();
+      case 'leave': return await leaveRoom();
+      case 'end': return await endGame();
+      case 'peek': peek = !peek; return render();
+      case 'kick':
+        if(confirm(`${nameOf(id)} 님을 내보낼까요?`)) await db.ref(`rooms/${roomCode}/players/${id}`).remove();
+        return;
+      case 'copy': {
+        const url = inviteUrl();
+        try{ await navigator.clipboard.writeText(url); toast('초대 링크를 복사했어요'); }
+        catch(e){ prompt('이 링크를 복사해 보내세요', url); }
+        return;
+      }
+      case 'addTopic': {
+        const text = document.getElementById('tText').value.trim();
+        const unit = document.getElementById('tUnit').value.trim();
+        const min = Number(document.getElementById('tMin').value), max = Number(document.getElementById('tMax').value);
+        const minRaw = document.getElementById('tMin').value, maxRaw = document.getElementById('tMax').value;
+        if(!text) return toast('주제를 적어 주세요');
+        if(minRaw === '' || maxRaw === '' || !Number.isInteger(min) || !Number.isInteger(max) || min >= max) return toast('최소·최대를 정수로, 최소 < 최대가 되게 적어 주세요');
+        const list = getCustom(); list.push({text, unit, min, max}); setCustom(list);
+        ['tText','tUnit','tMin','tMax'].forEach(k => document.getElementById(k).value = '');
+        render(); document.querySelector('details.topics').open = true; toast('주제를 추가했어요');
+        return;
+      }
+      case 'delTopic': {
+        const list = getCustom(); list.splice(Number(id), 1); setCustom(list);
+        render(); document.querySelector('details.topics').open = true; return;
+      }
+    }
+  }catch(e){ console.error(e); toast('연결에 문제가 있어요. 잠시 후 다시 시도해 주세요'); }
+}
+
+$app.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if(!b || b.disabled) return;
+  act(b.dataset.act, b.dataset.id);
+});
+$app.addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  const id = e.target.id;
+  if(id === 'numIn') act('submit');
+  else if(id === 'codeIn') act('join');
+});
+
+/* ---------- 시작 ---------- */
+render();
+if(db){
+  const saved = store('le_room');
+  if(saved){
+    db.ref('rooms/'+saved).get().then(s => {
+      if(s.exists() && s.val().players && s.val().players[myId]) enterRoom(saved);
+      else store('le_room', null);
+    }).catch(()=>{});
+  }
+}
+</script>
+</body>
+</html>
